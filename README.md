@@ -6,14 +6,13 @@ This plugin is a modified version of the native Flutter [camera](https://github.
 
 This version allows the definition of manual parameters for the Android camera:
 
-| Feature       	|     Values    	|        Type        	| Description                                                                                                                       	|
-|:---------------	|:-------------:	|:------------------:	|:-----------------------------------------------------------------------------------------------------------------------------------	|
-| enableFlash   	|   true/false  	|        bool        	| Turn flash on or off                                                                                                              	|
-| focusDistance 	| 0 (auto) - +∞ 	|       double       	| Distance in meters from camera to focused object                                                                                  	|
-| iso           	| 0 (auto) - +∞ 	|         int        	| Sensor's sensitivity to light                                                                                                     	|
-| shutterSpeed  	| 0 (auto) - +∞ 	|         int        	| 1s / shutterSpeed = duration of the sensor exposure                                                                               	|
-| whiteBalance  	|      ...      	| WhiteBalancePreset 	| White balance Android [options](https://developer.android.com/reference/android/hardware/camera2/CaptureRequest#CONTROL_AWB_MODE) 	|
-
+| Feature       |     Values    |        Type        | Description                                                                                                                       |
+|:--------------|:-------------:|:------------------:|:----------------------------------------------------------------------------------------------------------------------------------|
+| enableFlash   |   true/false  |        bool        | Turn flash on or off                                                                                                              |
+| focusDistance | 0 (auto) - +∞ |       double       | Distance in meters from camera to focused object                                                                                  |
+| iso           | 0 (auto) - +∞ |         int        | Sensor's sensitivity to light                                                                                                     |
+| shutterSpeed  | 0 (auto) - +∞ |         int        | 1s / shutterSpeed = duration of the sensor exposure                                                                               |
+| whiteBalance  |      ...      | WhiteBalancePreset | White balance Android [options](https://developer.android.com/reference/android/hardware/camera2/CaptureRequest#CONTROL_AWB_MODE) |
 
 ## Installation
 

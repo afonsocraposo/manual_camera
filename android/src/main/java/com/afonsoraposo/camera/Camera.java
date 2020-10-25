@@ -22,6 +22,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.util.Log;
 import android.util.Size;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -53,8 +54,8 @@ public class Camera {
   private final Long shutterSpeed;
   private final Long exposureTime;
   private final int whiteBalance;
-  private final boolean enableFlash;
   private final float focusDistance;
+  private final boolean mFlashSupported;
 
   private CameraDevice cameraDevice;
   private CameraCaptureSession cameraCaptureSession;
@@ -84,7 +85,6 @@ public class Camera {
       final String cameraName,
       final String resolutionPreset,
       final boolean enableAudio,
-      final boolean enableFlash,
       final int iso,
       final int shutterSpeed,
       final String whiteBalance,
@@ -98,7 +98,6 @@ public class Camera {
     this.cameraName = cameraName;
     this.enableAudio = enableAudio;
 
-    this.enableFlash = enableFlash;
     this.iso = iso;
     this.shutterSpeed = Long.valueOf(shutterSpeed);
     this.exposureTime = Long.valueOf((int)(shutterSpeed*0.9));
@@ -124,6 +123,9 @@ public class Camera {
     CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraName);
     StreamConfigurationMap streamConfigurationMap =
         characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+    // Check if the flash is supported.
+    Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+    mFlashSupported = available == null ? false : available;
     //noinspection ConstantConditions
     sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
     //noinspection ConstantConditions
@@ -216,6 +218,7 @@ public class Camera {
 
           @Override
           public void onClosed(@NonNull CameraDevice camera) {
+
             dartMessenger.sendCameraClosingEvent();
             super.onClosed(camera);
           }
@@ -387,9 +390,6 @@ public class Camera {
                 if(iso!=0){
                     captureRequestBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);
                 }
-                if(enableFlash){
-                    captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH); // turn on flash
-                }
 
                 cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, null);
               if (onSuccessCallback != null) {
@@ -547,6 +547,7 @@ public class Camera {
         null);
   }
 
+
   private void closeCaptureSession() {
     if (cameraCaptureSession != null) {
       cameraCaptureSession.close();
@@ -588,5 +589,24 @@ public class Camera {
             ? 0
             : (isFrontFacing) ? -currentOrientation : currentOrientation;
     return (sensorOrientationOffset + sensorOrientation + 360) % 360;
+  }
+
+  private final int CAMERA_FLASH_MODE_OFF = 0;
+  private final int CAMERA_FLASH_MODE_TORCH = 3;
+
+  public void setFlash(boolean value, Result result) throws Exception {
+    if(mFlashSupported ) {
+        setFlashModeRequest(captureRequestBuilder, value ? CAMERA_FLASH_MODE_TORCH : CAMERA_FLASH_MODE_OFF);
+        CaptureRequest request = captureRequestBuilder.build();
+        cameraCaptureSession.setRepeatingRequest(request, null, null);
+        result.success(true);
+    }else{
+      result.success(false);
+    }
+  }
+
+  private void setFlashModeRequest(CaptureRequest.Builder builderRequest, int mode) {
+    builderRequest.set(CaptureRequest.FLASH_MODE, mode == CAMERA_FLASH_MODE_TORCH ?
+            CameraMetadata.FLASH_MODE_TORCH :CameraMetadata.FLASH_MODE_OFF );
   }
 }

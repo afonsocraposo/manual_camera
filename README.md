@@ -21,7 +21,7 @@ First, add `manual_camera` as a [dependency in your pubspec.yaml file](https://f
 dependencies:
   flutter:
     sdk: flutter
-  manual_camera: ^0.0.1 // add manual_camera plugin
+  manual_camera: ^0.0.2 // add manual_camera plugin
 ```
 
 ### iOS
@@ -82,7 +82,6 @@ class _CameraAppState extends State<CameraApp> {
       iso: 100,
       shutterSpeed: 30,
       whiteBalance: WhiteBalancePreset.cloudy,
-      enableFlash: true,
       focusDistance: 0.1,
     );
     controller.initialize().then((_) {
@@ -90,6 +89,11 @@ class _CameraAppState extends State<CameraApp> {
         return;
       }
       setState(() {});
+      Future.delayed(
+        Duration(
+          milliseconds: 1000,
+        ),
+      ).then((_) => _cameraController.flash(true));
     });
   }
 

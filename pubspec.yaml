@@ -1,6 +1,6 @@
 name: manual_camera
 description: A Flutter plugin for manually controlling the camera on Android devices. All the native functions of the Flutter official Camera plugin are available.
-version: 0.0.1+1
+version: 0.0.2+1
 
 homepage: https://afonsoraposo.com
 repository: https://github.com/afonsocraposo/manual_camera

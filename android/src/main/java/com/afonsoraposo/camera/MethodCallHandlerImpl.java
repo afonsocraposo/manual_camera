@@ -113,6 +113,15 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           }
           break;
         }
+      case "enableFlash":
+      {
+        try {
+          camera.setFlash(call.argument("flash"), result);
+        } catch (Exception e) {
+          handleException(e, result);
+        }
+        break;
+      }
       case "stopImageStream":
         {
           try {
@@ -145,7 +154,6 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
     String cameraName = call.argument("cameraName");
     String resolutionPreset = call.argument("resolutionPreset");
     boolean enableAudio = call.argument("enableAudio");
-    boolean enableFlash = call.argument("enableFlash");
     int iso = call.argument("iso");
     int shutterSpeed = call.argument("shutterSpeed");
     double fd = call.argument("focusDistance");
@@ -162,7 +170,6 @@ final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             cameraName,
             resolutionPreset,
             enableAudio,
-            enableFlash,
             iso,
             shutterSpeed,
             whiteBalance,

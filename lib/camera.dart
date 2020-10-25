@@ -300,7 +300,6 @@ class CameraController extends ValueNotifier<CameraValue> {
     this.description,
     this.resolutionPreset, {
     this.enableAudio = true,
-    this.enableFlash = false,
     this.iso = 0,
     this.shutterSpeed = 0,
     this.whiteBalance = WhiteBalancePreset.auto,
@@ -313,8 +312,8 @@ class CameraController extends ValueNotifier<CameraValue> {
   /// Whether to include audio when recording a video.
   final bool enableAudio;
 
-  /// Wheter to turn on flash or not
-  final bool enableFlash;
+  /// Flash state
+  bool isFlashOn;
 
   /// ISO value
   final int iso;
@@ -350,7 +349,6 @@ class CameraController extends ValueNotifier<CameraValue> {
           'cameraName': description.name,
           'resolutionPreset': serializeResolutionPreset(resolutionPreset),
           'enableAudio': enableAudio,
-          'enableFlash': enableFlash,
           'iso': iso,
           'shutterSpeed': (shutterSpeed == 0) ? 0 : 1000000000 ~/ shutterSpeed,
           'whiteBalance': serializeWhiteBalancePreset(whiteBalance),
@@ -492,6 +490,19 @@ class CameraController extends ValueNotifier<CameraValue> {
         onAvailable(CameraImage._fromPlatformData(imageData));
       },
     );
+  }
+
+  Future<bool> flash(bool value) async {
+    try {
+      return await _channel.invokeMethod(
+        'enableFlash',
+        <String, dynamic>{
+          'flash': value,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw CameraException(e.code, e.message);
+    }
   }
 
   /// Stop streaming images from platform camera.

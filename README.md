@@ -1,6 +1,6 @@
 # Manual Camera Plugin
 
-[![pub package](https://img.shields.io/pub/v/manual_camera.svg)](https://pub.dartlang.org/packages/manual_cameraj)
+[![pub package](https://img.shields.io/pub/v/manual_camera.svg)](https://pub.dartlang.org/packages/manual_camera)
 
 This plugin is a modified version of the native Flutter [camera](https://github.com/flutter/plugins/tree/master/packages/camera) plugin.
 
